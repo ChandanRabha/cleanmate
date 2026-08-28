@@ -87,7 +87,7 @@ test("presents industries as coverage information, not navigation", async ({ pag
 });
 
 test("routes booking actions to the CleanMate WhatsApp number", async ({ page }) => {
-  const bookingLinks = page.locator('a[href^="https://wa.me/919774883172"]');
+  const bookingLinks = page.locator('a[href^="https://wa.me/918638785565"]');
 
   await expect(bookingLinks).toHaveCount(10);
   for (const link of await bookingLinks.all()) {
@@ -109,7 +109,7 @@ test("calculates a cleaning estimate and includes it in WhatsApp", async ({ page
 
   await expect(page.getByTestId("estimate-total")).toHaveText("₹6,900");
   const estimateLink = page.getByRole("link", { name: "Send estimate on WhatsApp" });
-  await expect(estimateLink).toHaveAttribute("href", /wa\.me\/919774883172/);
+  await expect(estimateLink).toHaveAttribute("href", /wa\.me\/918638785565/);
   await expect(estimateLink).toHaveAttribute("href", /Estimated%20starting%20price%3A%20%E2%82%B96%2C900/);
 });
 
@@ -117,7 +117,7 @@ test("shows a QR code for the same WhatsApp contact", async ({ page }) => {
   const qr = page.getByTestId("whatsapp-qr");
   await expect(qr).toBeVisible();
   await expect(qr.locator("title")).toHaveText("Scan to contact CleanMate on WhatsApp");
-  await expect(qr.locator("xpath=..")).toHaveAttribute("href", /wa\.me\/919774883172/);
+  await expect(qr.locator("xpath=..")).toHaveAttribute("href", /wa\.me\/918638785565/);
   await expect(page.getByText("+91 97748 83172")).toBeVisible();
 });
 
