@@ -47,11 +47,12 @@ test("does not overflow horizontally", async ({ page }) => {
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
 });
 
-test("links the hero directly to the pricing calculator", async ({ page }) => {
+test("scrolls to the pricing calculator without adding a hash route", async ({ page }) => {
   const calculatorLink = page.getByRole("link", { name: "Calculate my price" });
   await expect(calculatorLink).toHaveAttribute("href", "#calculator");
   await calculatorLink.click();
   await expect(page.locator("#calculator")).toBeInViewport();
+  await expect(page).toHaveURL(/\/$/);
 });
 
 test("shows an icon for every hero trust point", async ({ page }) => {

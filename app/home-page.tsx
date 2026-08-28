@@ -6,6 +6,7 @@ import { useLanguage } from "./language-context";
 import { PricingCalculator } from "./pricing-calculator";
 import { RevealController } from "./reveal-controller";
 import { WhatsAppContact } from "./whatsapp-contact";
+import type { MouseEvent } from "react";
 
 const copy = {
   en: {
@@ -41,7 +42,16 @@ export function HomePage() {
   const { language } = useLanguage();
   const t = copy[language];
   const whatsappUrl = (message = t.whatsapp) => `https://wa.me/918638785565?text=${encodeURIComponent(message)}`;
-  return <main><RevealController />
+  const handleInternalNavigation = (event: MouseEvent<HTMLElement>) => {
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.hash.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    history.replaceState(null, "", `${location.pathname}${location.search}`);
+  };
+  return <main onClick={handleInternalNavigation}><RevealController />
     <header className="nav-wrap"><a className="brand" href="#top"><span className="brand-mark"><Sparkles size={19} /></span><span>Clean<span>mate.</span></span></a><nav><a href="#services">{t.nav[0]}</a><a href="#pricing">{t.nav[1]}</a><a href="#about">{t.nav[2]}</a></nav><div className="nav-actions"><LanguageSwitcher /><a className="button button-dark nav-cta" href={whatsappUrl()} target="_blank" rel="noreferrer"><MessageCircle size={16} /> {t.nav[3]}</a></div></header>
     <section className="hero" id="top"><div className="hero-copy"><div className="eyebrow"><span /> {t.eyebrow}</div><h1>{t.hero[0]}<br /><em>{t.hero[1]}</em></h1><p>{t.hero[2]}</p><div className="hero-actions"><a className="button button-green" href={whatsappUrl()} target="_blank" rel="noreferrer">{t.hero[3]} <MessageCircle size={18} /></a><div className="hero-links"><a className="button button-calculator" href="#calculator"><CalculatorIcon size={17} /> {t.hero[4]}</a><a className="text-link" href="#services">{t.hero[5]} <ArrowRight size={15} /></a></div></div><div className="trust-row">{[[ShieldCheck, t.trust[0]], [Leaf, t.trust[1]], [CalendarClock, t.trust[2]]].map(([Icon, item]) => { const I = Icon as typeof ShieldCheck; const words = item as readonly string[]; return <div className="trust-item" key={words[0]}><span className="trust-icon"><I size={19} /></span><span className="trust-copy"><b>{words[0]}</b><small>{words[1]}</small></span></div> })}</div></div><div className="hero-visual"><img src={`${basePath}/cleanmate-team.png`} alt="CleanMate professional cleaning team member" /><div className="hero-badge"><span><Star size={15} fill="currentColor" /> {t.trusted}</span><b>{t.badge[0]}<br />{t.badge[1]}</b></div></div></section>
     <section className="marquee">{t.marquee.map((item, index) => <span key={item}>{index > 0 && <i>✦</i>}{item}</span>)}</section>
